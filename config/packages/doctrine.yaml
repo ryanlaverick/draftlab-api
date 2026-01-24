@@ -14,12 +14,18 @@ doctrine:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: false
         mappings:
-            Draftlab:
+            Draftlab\Model:
                 is_bundle: false
                 type: xml
                 dir: '%kernel.project_dir%/src/Infrastructure/Doctrine/Mappings/Model'
                 prefix: 'Draftlab\Domain\Model'
-                alias: Draftlab
+                alias: Draftlab\Model
+            DraftLab\ValueObject:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Infrastructure/Doctrine/Mappings/ValueObject'
+                prefix: 'Draftlab\Domain\ValueObject'
+                alias: Draftlab\ValueObject
         controller_resolver:
             auto_mapping: false
 
