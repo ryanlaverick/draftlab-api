@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: postgres-data
+spec:
+    accessModes:
+        - ReadWriteOnce
+    resources:
+        requests:
+            storage: 10Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+    name: postgres
+spec:
+    serviceName: "postgres"
+    replicas: 1
+    selector:
+        matchLabels:
+            app: postgres
+    template:
+        metadata:
+            labels:
+                app: postgres
+        spec:
+            containers:
+                - name: postgres
+                  image: postgres:16
+                  env:
+                      - name: POSTGRES_DATABASE
+                        value: "draftlab"
+                      - name: POSTGRES_USERNAME
+                        value: "draftlab"
+                      - name: POSTGRES_PASSWORD
+                        value: "password" # Make sure to store it securely
+                  volumeMounts:
+                      - name: postgres-data
+                        mountPath: /var/lib/postgresql/data
+    volumeClaimTemplates:
+        - metadata:
+              name: postgres-data
+          spec:
+              accessModes:
+                  - ReadWriteOnce
+              resources:
+                  requests:
+                      storage: 10Gi
+              storageClassName: standard
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: postgres
+spec:
+    clusterIP: None  # This makes the service headless (useful for StatefulSet)
+    ports:
+    - port: 5432
+      name: postgres
+    selector:
+        app: postgres
