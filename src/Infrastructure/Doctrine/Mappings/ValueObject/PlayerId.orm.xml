@@ -1,7 +1,0 @@
-<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
-    <embeddable name="Draftlab\Domain\ValueObject\PlayerId">
-        <id name="id" type="string" length="32">
-            <generator strategy="NONE" />
-        </id>
-    </embeddable>
-</doctrine-mapping>
