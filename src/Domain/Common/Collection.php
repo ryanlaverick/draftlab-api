@@ -1,11 +1,11 @@
 <?php
 
-namespace Draftlab\Domain;
+namespace Draftlab\Domain\Common;
 
 /**
  * @implements \IteratorAggregate<int, Collectable>
  */
-class AbstractCollection implements \IteratorAggregate
+class Collection implements \IteratorAggregate
 {
     /**
      * @param list<Collectable> $items
@@ -23,5 +23,10 @@ class AbstractCollection implements \IteratorAggregate
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->items);
+    }
+
+    public function isEmpty(): bool
+    {
+        return count($this->items) === 0;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Draftlab\Domain;
+namespace Draftlab\Domain\Common;
 
 interface Collectable
 {
