@@ -2,11 +2,12 @@
 
 namespace Draftlab\Domain\Common\Validation;
 
-final class NotNullRule extends Rule
+final class StringRule extends Rule
 {
-    public function __invoke(mixed $passenger): mixed
+
+    public function __invoke(mixed $passenger): false|string
     {
-        if (is_null($passenger)) {
+        if (! is_string($passenger)) {
             return false;
         }
 
@@ -15,7 +16,7 @@ final class NotNullRule extends Rule
 
     public function getFailureMessage(): string
     {
-        return 'This value cannot be null.';
+        return 'This value must be a string.';
     }
 
     public function pauseOnFailure(): bool

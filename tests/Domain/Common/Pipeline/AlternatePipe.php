@@ -1,6 +1,6 @@
 <?php
 
-namespace Draftlab\Tests\Domain\Common;
+namespace Draftlab\Tests\Domain\Common\Pipeline;
 
 use Draftlab\Domain\Common\Pipe;
 

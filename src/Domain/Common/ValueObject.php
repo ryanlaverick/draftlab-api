@@ -2,20 +2,19 @@
 
 namespace Draftlab\Domain\Common;
 
+use Draftlab\Domain\Common\Validation\Rule;
+use Draftlab\Domain\Common\Validation\ValidationPipeline;
+
 abstract class ValueObject
 {
-    private readonly Collection $errorBag;
+    private static array $errorBag = [];
 
-    public function __construct(
-    ) {
-        $this->errorBag = new Collection();
-    }
-
-    abstract public function getValidationRules(): array;
+    /**
+     * @return list<Rule>
+     */
+    abstract public static function getValidationRules(): array;
 
     abstract public function getValue(): mixed;
-
-    abstract public function getFieldName(): string;
 
     public function equals(ValueObject $object): bool
     {
@@ -26,15 +25,30 @@ abstract class ValueObject
         return $this->getValue() === $object->getValue();
     }
 
-    public function validate(mixed $value): bool
+    public static function validate(mixed $value): bool
     {
+        $pipeline = new ValidationPipeline(
+            static::getValidationRules()
+        );
 
+        $pipeline->carry($value);
+        static::$errorBag = $pipeline->getErrors();
+
+        return empty(static::$errorBag);
     }
 
-    protected function isValid(mixed $value): bool
+    protected static function isValid(mixed $value): bool
     {
         self::validate($value);
 
-        return $this->errorBag->isEmpty();
+        return empty(static::$errorBag);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getErrorBag(): array
+    {
+        return static::$errorBag;
     }
 }

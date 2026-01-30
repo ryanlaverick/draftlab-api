@@ -2,6 +2,7 @@
 
 namespace Draftlab\Domain\Common\Validation;
 
+use Draftlab\Domain\Common\Pipe;
 use Draftlab\Domain\Common\Pipeline;
 
 final class ValidationPipeline extends Pipeline
@@ -17,7 +18,9 @@ final class ValidationPipeline extends Pipeline
     public function afterEach(mixed $result, mixed $pipe): void
     {
         if (false === $result) {
-            $this->errors[] = $pipe->getFailMessage();
+            /** @var Rule $rule */
+            $rule = $this->getInstanceFor($pipe);
+            $this->errors[] = $rule->getFailureMessage();
         }
     }
 
@@ -27,5 +30,16 @@ final class ValidationPipeline extends Pipeline
     public function getErrors(): array
     {
         return $this->errors;
+    }
+
+    protected function getInstanceFor(mixed $pipe): Pipe
+    {
+        if (is_callable($pipe)) {
+            return $pipe;
+        } else if(is_string($pipe) && class_exists($pipe)) {
+            return new $pipe;
+        }
+
+        throw new \InvalidArgumentException('Unable to parse failure message from Rule');
     }
 }

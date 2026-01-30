@@ -31,18 +31,21 @@ class Pipeline
         $result = $value;
 
         foreach ($this->pipes as $pipe) {
+            $pipeInstance = null;
+
             if (is_callable($pipe)) {
+                $pipeInstance = $pipe;
                 $result = $pipe($result);
             } else if(is_string($pipe) && class_exists($pipe)) {
-                $instance = new $pipe;
-                $result = $instance->__invoke($result);
+                $pipeInstance = new $pipe;
+                $result = $pipeInstance->__invoke($result);
             } else {
                 throw new \InvalidArgumentException('Unsupported pipe type');
             }
 
             $this->afterEach($result, $pipe);
 
-            if ($pipe instanceof Rule && $result === false && $pipe->pauseOnFailure()) {
+            if ($pipeInstance instanceof Rule && $result === false && $pipeInstance->pauseOnFailure()) {
                 break;
             }
         }
