@@ -2,13 +2,15 @@
 
 namespace Draftlab\Domain\Common;
 
+use Draftlab\Domain\Common\Validation\Rule;
+
 class Pipeline
 {
     /**
      * @param list<Pipe> $pipes
      */
     public function __construct(
-        private array $pipes = []
+        private array $pipes = [],
     ) {
     }
 
@@ -17,6 +19,11 @@ class Pipeline
         $this->pipes[] = $class;
 
         return new self($this->pipes);
+    }
+
+    public function afterEach(mixed $result, mixed $pipe): void
+    {
+        //
     }
 
     public function carry(mixed $value): mixed
@@ -31,6 +38,12 @@ class Pipeline
                 $result = $instance->__invoke($result);
             } else {
                 throw new \InvalidArgumentException('Unsupported pipe type');
+            }
+
+            $this->afterEach($result, $pipe);
+
+            if ($pipe instanceof Rule && $result === false && $pipe->pauseOnFailure()) {
+                break;
             }
         }
 

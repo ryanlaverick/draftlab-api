@@ -2,9 +2,11 @@
 
 namespace Draftlab\Domain\Common\Validation;
 
-abstract class Rule
+use Draftlab\Domain\Common\Pipe;
+
+abstract class Rule implements Pipe
 {
-    public function __invoke()
-    {
-    }
+    abstract public function getFailureMessage(): string;
+
+    abstract public function pauseOnFailure(): bool;
 }
