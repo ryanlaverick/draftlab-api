@@ -9,12 +9,12 @@ abstract class ValueObject
 {
     private static array $errorBag = [];
 
+    abstract public function getValue(): mixed;
+
     /**
      * @return list<Rule>
      */
     abstract public static function getValidationRules(): array;
-
-    abstract public function getValue(): mixed;
 
     public function equals(ValueObject $object): bool
     {
