@@ -1,0 +1,8 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
+    <entity name="Draftlab\Domain\Model\School">
+        <embedded name="id" class="Draftlab\Domain\ValueObject\Uuid" use-column-prefix="false" />
+        <embedded name="name" class="Draftlab\Domain\ValueObject\SchoolName" use-column-prefix="false" />
+        <embedded name="shortName" class="Draftlab\Domain\ValueObject\SchoolShortName" use-column-prefix="false" />
+        <embedded name="imageUrl" class="Draftlab\Domain\ValueObject\ImageUrl" use-column-prefix="false" />
+    </entity>
+</doctrine-mapping>
